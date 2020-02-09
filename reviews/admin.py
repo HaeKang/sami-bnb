@@ -6,4 +6,4 @@ from . import models
 class RebiewAdmin(admin.ModelAdmin):
     """Rebiew Admin Definition """
 
-    pass
+    list_display = ("__str__", "rating_average")
