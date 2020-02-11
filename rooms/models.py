@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from django_countries.fields import CountryField
 from core import models as core_models
 from users import models as user_models
@@ -90,7 +91,7 @@ class Room(core_models.TimeStampedModel):
     )
 
     amenities = models.ManyToManyField("Amenity", related_name="rooms", blank=True)
-    facility = models.ManyToManyField("Facility", related_name="rooms", blank=True)
+    facilities = models.ManyToManyField("Facility", related_name="rooms", blank=True)
     house_rules = models.ManyToManyField("HouseRule", related_name="rooms", blank=True)
 
     def __str__(self):
@@ -100,6 +101,9 @@ class Room(core_models.TimeStampedModel):
     def save(self, *args, **kwargs):
         self.city = str.capitalize(self.city)  # 첫글자 대문자 변환
         super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse("rooms:detail", kwargs={'pk' : self.pk})
 
     # 리뷰 평점
     def total_rating(self):
