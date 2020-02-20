@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.auth import password_validation
 from . import models
 
 
@@ -23,29 +24,40 @@ class LoginForm(forms.Form):
 
 
 class SignUpForm(forms.ModelForm):
-
     class Meta:
         model = models.User
-        fields = ("first_name", "last_name", "email","birthdate")
+        fields = ("first_name", "last_name", "email")
 
-    password = forms.CharField(widget = forms.PasswordInput)
-    password1 = forms.CharField(widget = forms.PasswordInput,  label = "Cofirm Password")
+    password = forms.CharField(
+        label="Password",
+        strip=False,
+        widget=forms.PasswordInput(attrs={"autocomplete": "new-password"}),
+        help_text=password_validation.password_validators_help_text_html(),
+    )
+
+    password1 = forms.CharField(
+        label="Password confirmation",
+        widget=forms.PasswordInput(attrs={"autocomplete": "new-password"}),
+        strip=False,
+        help_text="Enter the same password as before, for verification.",
+    )
 
     def clean_password1(self):
         password = self.cleaned_data.get("password")
         password1 = self.cleaned_data.get("password1")
 
         if password != password1:
-            raise forms.ValidationError("Password confirmation dose not match")
+            raise forms.ValidationError("Password Error")
         else:
-            return password
-    
+            try:
+                password_validation.validate_password(password1, self.instance)
+                return password
+            except forms.ValidationError as error:
+                self.add_error("password", error)
 
     def save(self, *args, **kwargs):
-        user = super().save(commit=False) # 객체는 만들지만 DB에 올리진 X
-        email = self.cleaned_data.get("email")
+        user = super().save(commit=False)
+        user.username = self.cleaned_data.get("email")
         password = self.cleaned_data.get("password")
-        user.username = email
         user.set_password(password)
         user.save()
-
