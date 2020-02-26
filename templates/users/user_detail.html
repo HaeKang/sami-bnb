@@ -16,28 +16,28 @@
         <div class="flex items-center">
             <span class="text-3xl mt-1">{{user_obj.first_name}}</span>
             {% if user_obj.superhost %}
-            <i class="fas fa-check-circle text-teal-400 ml-1"></i>
+                <i class="fas fa-check-circle text-teal-400 ml-1"></i>
             {% endif %}
         </div>
         <span class="text-lg mb-5">{{user_obj.bio}}</span>
 
         <!-- 프로필이 내 프로필이면 -->
         {% if user == user_obj %}
-        <a href="{% url 'users:update' %}" class="btn-link">Edit Profile</a>
+            <a href="{% url 'users:update' %}" class="btn-link">Edit Profile</a>
         {% endif %}
 
     </div>
 
     <!-- 내가 갖고 있는 room -->
     {% if user_obj.rooms.count > 0 %}
-    <h3 class="mb-12 text-2xl text-center">{{user_obj.first_name}}'s Rooms</h3>
-    <div class="container mx-auto pb-10 ">
-        <div class="flex flex-wrap -mx-40 mb-10">
-            {% for room in user_obj.rooms.all  %}
-            {% include 'mixins/room_card.html' with room=room %}
-            {% endfor %}
+        <h3 class="mb-12 text-2xl text-center">{{user_obj.first_name}}'s Rooms</h3>
+        <div class="container mx-auto pb-10 ">
+            <div class="flex flex-wrap -mx-40 mb-10">
+                {% for room in user_obj.rooms.all  %}
+                    {% include 'mixins/room_card.html' with room=room %}
+                {% endfor %}
+            </div>
         </div>
-    </div>
     {% endif %}
 
 </div>
