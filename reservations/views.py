@@ -72,3 +72,17 @@ def edit_reservation(request, pk, verb):
     messages.success(request, "Reservation Updated")
 
     return redirect(reverse("reservations:detail", kwargs={"pk": reservation.pk}))
+
+
+# 진행중
+def my_reservation(request):
+
+    reservation = []
+    for i in models.Reservation.objects.filter(guest=request.user):
+        reservation.append(i)
+
+    print(reservation)
+
+    return render(
+        request, "reservations/my_reservation.html", {"reservation": reservation}
+    )
