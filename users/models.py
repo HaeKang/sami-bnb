@@ -7,9 +7,12 @@ from django.utils.html import strip_tags
 from django.shortcuts import reverse
 from django.template.loader import render_to_string
 from django.utils.translation import gettext_lazy as _
+from core import managers as core_managers
 
 # Create your models here.
 class User(AbstractUser):
+
+    objects = core_managers.CustomUserManager()
 
     """ Custom User Model """
 

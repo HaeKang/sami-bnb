@@ -7,3 +7,11 @@ class CustomModelManager(models.Manager):
             return self.get(**kwargs)
         except self.model.DoesNotExist:
             return None
+
+
+class CustomUserManager(models.Manager):
+    def get_or_none(self, **kwargs):
+        try:
+            return self.get(**kwargs)
+        except self.model.DoesNotExist:
+            return None
